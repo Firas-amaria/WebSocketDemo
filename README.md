@@ -6,14 +6,14 @@ A small bilingual website for learning how a browser and an ESP32 exchange text 
 
 - Node.js 22.12 or newer (with npm)
 - A browser and computer
-- An ESP32-S3 touchscreen device and its firmware project
+- A JC3248W535EN ESP32-S3 touchscreen board and its firmware project
 - Wi-Fi shared by the computer and ESP32
 
 The website does not flash your ESP32 or implement its display firmware. The device must run firmware that connects to this server and displays received text. See [the ESP32 guide](esp32/README.md). You can first test the relay without a physical board with `npm test`.
 
 ## Install
 
-Open a terminal in this repository:
+Open a terminal (the app where you type commands, such as PowerShell on Windows) in the project folder. Run these commands one at a time, waiting for the first to finish:
 
 ```bash
 npm install
@@ -48,11 +48,15 @@ On another computer or tablet on the same Wi-Fi, open `http://<server-computer-i
 
 1. Find the server computer’s local IPv4 address in its Wi-Fi network settings. On Windows, open a terminal, run `ipconfig`, and look for **IPv4 Address** under the active Wi-Fi adapter. On macOS/Linux, use network settings.
 2. For example, if the address is `192.168.1.10`, use `ws://192.168.1.10:8080` in the website and firmware.
-3. Configure the firmware’s Wi-Fi SSID, password, server IP, and port. Keep Wi-Fi credentials in the firmware project, not this repository.
+3. The intended JC3248W535EN firmware should let you enter the Wi-Fi name, password, computer IP, and port on the touchscreen. You can then change networks without editing code. This repository does not include that firmware or settings screen; see [the ESP32 guide](esp32/README.md) for what needs to be implemented.
 4. On every successful WebSocket connection, the firmware must send the exact text `ESP32_CONNECTED` as its first message.
 5. Subsequent messages are plain text. Show incoming messages on the touchscreen and send `Hello computer` back.
 
 Do not use `localhost` in the ESP32 firmware: that refers to the ESP32 itself. See [esp32/README.md](esp32/README.md) for a small, explicitly conceptual example.
+
+**What the terms mean:** firmware is the program running on the board; SSID means Wi-Fi network name; the local IP is the computer's address on your network; and a port tells the computer which program to connect to. Here, `5173` opens the website and `8080` carries messages. Enter only the IP (for example, `192.168.1.10`) in the board's IP field; use the full address (`ws://192.168.1.10:8080`) in the website's WebSocket field.
+
+When changing Wi-Fi, connect the computer and board to the new network, restart `npm run dev`, and use the newly printed website address. Update the computer IP in the board's settings if it changed, then reconnect both the website and board.
 
 ## First test
 
@@ -163,7 +167,7 @@ Tests start an isolated server on a free port and use real WebSocket clients to 
 2. شغّل `npm install` ثم `npm run dev`.
 3. افتح عنوان **Classroom** الذي يظهر في الطرفية، مثل `http://192.168.1.10:5173`، وشاركه مع الطلاب على الشبكة نفسها. اختر **العربية** ثم **ابدأ التجربة**.
 4. اضغط **اتصل** لربط الموقع بالخادم.
-5. اضبط برنامج ESP32 باستخدام اسم Wi-Fi وكلمة المرور وعنوان IP المحلي للحاسوب والمنفذ `8080`.
+5. يجب أن يتيح برنامج لوحة JC3248W535EN إدخال اسم Wi-Fi وكلمة المرور وعنوان IP المحلي للحاسوب والمنفذ `8080` من شاشة اللمس، وتغيير الشبكة عند الحاجة. برنامج الجهاز وواجهة إعداداته غير مرفقين بهذا المشروع.
 6. يجب أن يرسل الجهاز `ESP32_CONNECTED` بعد كل اتصال. لا تستخدم `localhost` كعنوان للحاسوب في برنامج الجهاز.
 7. أرسل `Hello ESP32` من الموقع، ثم `Hello computer` من الجهاز.
 

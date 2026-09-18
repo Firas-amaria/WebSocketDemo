@@ -1,17 +1,36 @@
 # Connect your ESP32 firmware
 
-This is a **conceptual guide, not compilable firmware**. It does not assume a particular touchscreen driver or WebSocket library. It can guide a PlatformIO / ESP-IDF project using an ESP32-S3, LVGL, and a JC3248W535EN touchscreen.
+We are using the **JC3248W535EN** ESP32-S3 touchscreen board. This is a **conceptual guide, not compilable firmware** for a PlatformIO / ESP-IDF project using LVGL. It does not assume a particular touchscreen driver or WebSocket library.
+
+## Touchscreen connection settings
+
+The intended firmware should provide a settings screen with an on-screen keyboard so you can enter the computer's local IP address directly on the touchscreen. You should also be able to enter a Wi-Fi network name (SSID) and password and connect to a different Wi-Fi network whenever needed, without editing or reflashing the firmware.
+
+Keep these settings accessible after connecting. When you apply new settings, the firmware should close the existing WebSocket connection, reconnect Wi-Fi if the network changed, and connect to the selected server IP and port. After switching networks, make sure the computer and board are on the same Wi-Fi network and update the computer's IP address on the touchscreen if it changed.
+
+This repository does not include the device firmware or touchscreen settings UI; these are requirements for the firmware you build using this guide.
 
 ## Four settings
 
+Firmware means the program running on the board. Once the touchscreen settings screen is implemented, these are the values you enter there:
+
+| Setting | What to enter | Example |
+| --- | --- | --- |
+| Wi-Fi name (SSID) | The network name you choose on your computer | `MyWiFi` |
+| Wi-Fi password | The password for that network | Your actual Wi-Fi password |
+| Server IP | The computer's local IPv4 address, without `ws://` or a port | `192.168.1.10` |
+| Server port | The number used by the message server | `8080` |
+
+The examples below are for the person writing the board's firmware. They explain the logic and cannot be uploaded to the board as a working program.
+
 ```cpp
-const char* WIFI_NAME = "MyWiFi";               // Wi-Fi SSID
-const char* WIFI_PASSWORD = "password";        // Keep this in your firmware project
+const char* WIFI_NAME = "MyWiFi";             // Wi-Fi network name (SSID)
+const char* WIFI_PASSWORD = "password";      // Wi-Fi password
 const char* WEBSOCKET_SERVER = "192.168.1.10"; // Computer's local IP, not localhost
-const int WEBSOCKET_PORT = 8080;               // Node server port
+const int WEBSOCKET_PORT = 8080;             // Node server port
 ```
 
-Use your real values. Connect to `ws://192.168.1.10:8080/`, with path `/`. The computer and ESP32 should use the same Wi-Fi network.
+These constants only illustrate the four connection values. In the device firmware, use editable settings populated from the touchscreen instead of hardcoded credentials and IP addresses. Connect to `ws://192.168.1.10:8080/`, with path `/`, substituting your selected IP and port. The computer and ESP32 should use the same Wi-Fi network.
 
 ## Conceptual flow (pseudocode)
 
@@ -57,7 +76,9 @@ Arabic text can travel through the connection as UTF-8. Rendering Arabic on the 
 
 هذا مثال توضيحي **غير قابل للترجمة البرمجية مباشرةً**. استخدم دوال مكتبة WebSocket الموجودة في مشروع الجهاز.
 
-- اضبط اسم شبكة Wi-Fi وكلمة مرورها وعنوان IP المحلي للحاسوب والمنفذ `8080`.
+- نستخدم لوحة **JC3248W535EN** المزودة بشاشة لمس. يجب أن يتيح برنامج الجهاز إدخال عنوان IP المحلي للحاسوب واسم شبكة Wi-Fi وكلمة مرورها من خلال لوحة مفاتيح على الشاشة، مع المنفذ `8080` افتراضيًا.
+- يمكنك تغيير الشبكة عند الحاجة من شاشة الإعدادات دون تعديل البرنامج أو إعادة تحميله على الجهاز. بعد التغيير، تأكد من اتصال الحاسوب واللوحة بالشبكة نفسها وحدّث عنوان IP إذا تغيّر.
+- هذه متطلبات لبرنامج الجهاز؛ المستودع لا يتضمن تنفيذ البرنامج أو واجهة إعدادات شاشة اللمس.
 - عند نجاح كل اتصال أرسل `ESP32_CONNECTED` أولًا، ثم يمكنك إرسال `Hello computer`.
 - النص القادم من الموقع نص UTF-8 عادي، ولا يحتاج إلى تحليل JSON.
 - مرّر النص المستلم إلى مهمة العرض لتحديث شاشة LVGL وفق قواعد مشروعك.

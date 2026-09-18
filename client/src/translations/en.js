@@ -100,17 +100,18 @@ export default {
   ipNote:
     'This is only an example. Your computer’s IP address may be different. localhost works for a browser on the server computer, but the ESP32 needs the computer’s local IP.',
   lesson4: 'Connect the ESP32',
-  deviceIntro: 'Your firmware needs these four values:',
+  deviceIntro:
+    'We use the JC3248W535EN touchscreen board. Its firmware (the program on the board) should let you enter these four settings on the screen and change Wi-Fi whenever needed. The code below only shows example values:',
   configNotes: [
     'WIFI_NAME: your Wi-Fi network name (SSID).',
-    'WIFI_PASSWORD: your Wi-Fi password; keep it in your firmware project.',
+    'WIFI_PASSWORD: the password for your selected Wi-Fi network.',
     'WEBSOCKET_SERVER: the computer’s local IP, without ws://.',
     'WEBSOCKET_PORT: the Node server’s port, normally 8080.',
   ],
   deviceNetwork:
     'The computer and ESP32 should normally use the same network. Connect the firmware to ws://<computer-ip>:8080 and send ESP32_CONNECTED after every connection.',
   firmwareNote:
-    'Your touchscreen firmware must handle incoming text and show it on the display. This website does not install firmware. See esp32/README.md for conceptual ESP-IDF / PlatformIO / LVGL guidance.',
+    'The board firmware and touchscreen settings screen still need to be implemented; they are not included here. The firmware must also display incoming messages. After changing Wi-Fi, update the computer IP if it changed. See esp32/README.md for the firmware guide.',
   exercise: 'Your first exchange',
   exerciseSend: 'Send your first message',
   exerciseSteps: [

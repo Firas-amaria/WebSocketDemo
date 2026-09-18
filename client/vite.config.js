@@ -47,7 +47,9 @@ export default defineConfig({
             );
           }
           for (const { name, ip } of networkAddresses) {
-            console.log(`  Classroom (${name}): http://${ip}:${server.config.server.port}/`);
+            console.log(
+              `  Classroom (${name}): http://${ip}:${server.config.server.port}/`,
+            );
             console.log(
               `  WebSocket: ws://${ip}:8080 (or your configured server port)`,
             );
